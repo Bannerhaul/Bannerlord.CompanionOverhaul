@@ -1,0 +1,144 @@
+name: Publish Module
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  # Disable the .NET logo in the console output.
+  DOTNET_NOLOGO: true
+  # Disable the .NET first time experience to skip caching NuGet packages and speed up the build.
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  # Disable sending .NET CLI telemetry to Microsoft.
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build-module:
+    name: Build Module
+    runs-on: ubuntu-latest
+    outputs:
+      mod_version: ${{ steps.changelog.outputs.mod_version }}
+      mod_description: ${{ steps.changelog.outputs.mod_description }}
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@master
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Build Arena Overhaul
+      run: |
+        $path = $PWD.Path + '/bannerlord';
+
+        $implFX = $PWD.Path + '/bannerlord-implementationsFX';
+        $implCore = $PWD.Path + '/bannerlord-implementationsCore';
+
+        $finalFX = $path + '/Modules/CompanionOverhaul/bin/Win64_Shipping_Client/';
+        $finalCore = $path + '/Modules/CompanionOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/';
+        
+        $proj = 'src/CompanionOverhaul/CompanionOverhaul.csproj';
+
+        $pdllFX = $path + '/Modules/CompanionOverhaul/bin/Win64_Shipping_Client/CompanionOverhaul*.dll';
+        $ppdbFX = $path + '/Modules/CompanionOverhaul/bin/Win64_Shipping_Client/CompanionOverhaul*.pdb';
+        $pdllCore = $path + '/Modules/CompanionOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/CompanionOverhaul*.dll';
+        $ppdbCore = $path + '/Modules/CompanionOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/CompanionOverhaul*.pdb';
+
+        # The folders are required to be created before executing the script
+        New-Item -ItemType directory -Force -Path $path;
+        New-Item -ItemType directory -Force -Path $implFX;
+        New-Item -ItemType directory -Force -Path $implCore;
+
+        [string[]]$gameversions = Get-Content -Path supported-game-versions.txt;
+        # Process all implementations
+        For ($i = 0; $i -le $gameversions.Length - 1; $i++)
+        {
+            $gameversion = $gameversions[$i];
+            $version = $gameversion.substring(1);
+            $constgameversion = $gameversion.replace(".", "");
+            echo "::group::Build for $gameversion"
+            echo "Start building for gameversion = $gameversion"
+            dotnet clean $proj --configuration Release;
+            dotnet build $proj --configuration Release -p:OverrideGameVersion=$gameversion -p:GameFolder="$path" -p:ConstGameVersionWithPrefix="$constgameversion";
+
+            # Copy Implementations to the Implementations folder
+            Copy-Item $pdllFX $implFX/;
+            Copy-Item $ppdbFX $implFX/;
+            Copy-Item $pdllCore $implCore/;
+            Copy-Item $ppdbCore $implCore/;
+
+            echo "::endgroup::"
+        }
+        # Copy Implementations and Loader to the Module
+        Copy-Item $implFX/* $finalFX;
+        Copy-Item $implCore/* $finalCore;
+
+        # Delete Implementations folder
+        Remove-Item -Recurse $implFX;
+        Remove-Item -Recurse $implCore;
+      shell: pwsh
+
+    - name: Install and Run ChangelogParser
+      id: changelog
+      run: |
+        dotnet tool install -g Bannerlord.ChangelogParser
+        vers="$(bannerlord_changelog_parser latestversion -f "$PWD/changelog.txt")"
+        echo "::set-output name=mod_version::$vers"
+        desc="$(bannerlord_changelog_parser fulldescription -f "$PWD/changelog.txt")"
+        desc="${desc//'%'/'%25'}"
+        desc="${desc//$'\n'/'%0A'}"
+        desc="${desc//$'\r'/'%0D'}"
+        echo "::set-output name=mod_description::$desc"
+
+    - name: Upload bannerlord folder
+      uses: actions/upload-artifact@v4
+      with:
+        name: CompanionOverhaul
+        path: ./bannerlord/
+
+###########################
+#        NEXUSMODS        #
+###########################
+# publish-on-nexusmods:
+#   needs: ["build-module"]
+#   uses: BUTR/workflows/.github/workflows/release-nexusmods.yml@master
+#   with:
+#     nexusmods_game_id: mountandblade2bannerlord
+#     nexusmods_mod_id: 3477
+#     mod_filename: Arena Overhaul
+#     mod_version: ${{ needs.build-module.outputs.mod_version }}
+#     mod_description: ${{ needs.build-module.outputs.mod_description }}
+#     artifact_name: CompanionOverhaul
+#   secrets:
+#     NEXUSMODS_APIKEY: ${{ secrets.NEXUSMODS_APIKEY }}
+#     NEXUSMODS_COOKIES: ${{ secrets.NEXUSMODS_COOKIES }}
+
+###########################
+#          STEAM          #
+###########################
+# publish-on-steam:
+#   needs: ["build-module"]
+#   uses: BUTR/workflows/.github/workflows/release-steam.yml@master
+#   with:
+#     workshop_id: 2887640995
+#     mod_id: CompanionOverhaul
+#     mod_description: ${{ needs.build-module.outputs.mod_description }}
+#     artifact_name: CompanionOverhaul
+#   secrets:
+#     STEAM_LOGIN: ${{ secrets.STEAM_WORKSHOP_LOGIN }}
+#     STEAM_PASSWORD: ${{ secrets.STEAM_WORKSHOP_PASSWORD }}
+#     STEAM_AUTH_CODE: ${{ secrets.STEAM_WORKSHOP_AUTH_CODE }}
+
+###########################
+#         GITHUB          #
+###########################
+  publish-on-github:
+    needs: ["build-module"]
+    uses: BUTR/workflows/.github/workflows/release-github.yml@master
+    with:
+      mod_id: CompanionOverhaul
+      mod_version: ${{ needs.build-module.outputs.mod_version }}
+      mod_description: ${{ needs.build-module.outputs.mod_description }}
+      artifact_name: CompanionOverhaul
