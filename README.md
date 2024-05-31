@@ -10,6 +10,7 @@
         <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/6919" alt="Nexus Companionship Overhaul">
         <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fnexusmods-downloads-ayuqql60xfxb.runkit.sh%2F%3Ftype%3Dtotal%26gameId%3D3174%26modId%3D6919" /></a>
         </br>
-        <img src="https://staticdelivery.nexusmods.com/mods/3174/images/6919/6919-1717167985-931382868.png" width="1400">         
+        <img src="https://staticdelivery.nexusmods.com/mods/3174/images/6919/6919-1717170048-1906636213.png" width="1400">         
 </p>
+
 A variety of tweaks and gameplay changes to enrich companion-related gameplay both for player and AI.
