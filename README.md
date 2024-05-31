@@ -1,1 +1,1 @@
-# Bannerlord.CompanionOverhaul
+# Bannerlord.CompanionshipOverhaul

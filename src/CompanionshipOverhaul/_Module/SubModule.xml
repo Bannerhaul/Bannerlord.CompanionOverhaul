@@ -8,7 +8,7 @@
   <ModuleCategory value="Singleplayer"/>
   <ModuleType value="Community" />
   <Url value="$moduleurl$" />
-  <UpdateInfo value="NexusMods:6919;GitHub:BUTR/Bannerlord.ButterLib"/>
+  <UpdateInfo value="NexusMods:6919;GitHub:Bannerhaul/Bannerlord.CompanionshipOverhaul"/>
   <DependedModules>
     <DependedModule Id="Bannerlord.Harmony" DependentVersion="v$harmonyversion$" />
     <DependedModule Id="Bannerlord.ButterLib" DependentVersion="v$butterlibversion$" />
@@ -32,7 +32,7 @@
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" version="$gameversion$.*" />
     <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" version="$gameversion$.*" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" version="$gameversion$.*" optional="true" />
-    <DependedModuleMetadata id="BirthAndDeath" order="LoadBeforeThis" version="v$gameversion$.*" optional="true" />
+    <DependedModuleMetadata id="BirthAndDeath" order="LoadBeforeThis" version="$gameversion$.*" optional="true" />
   </DependedModuleMetadatas>
   <SubModules>
     <!-- Bannerlord Module Loader. Do not change the name! -->

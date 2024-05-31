@@ -29,22 +29,22 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: Build Arena Overhaul
+    - name: Build Companionship Overhaul
       run: |
         $path = $PWD.Path + '/bannerlord';
 
         $implFX = $PWD.Path + '/bannerlord-implementationsFX';
         $implCore = $PWD.Path + '/bannerlord-implementationsCore';
 
-        $finalFX = $path + '/Modules/CompanionOverhaul/bin/Win64_Shipping_Client/';
-        $finalCore = $path + '/Modules/CompanionOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/';
+        $finalFX = $path + '/Modules/CompanionshipOverhaul/bin/Win64_Shipping_Client/';
+        $finalCore = $path + '/Modules/CompanionshipOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/';
         
-        $proj = 'src/CompanionOverhaul/CompanionOverhaul.csproj';
+        $proj = 'src/CompanionshipOverhaul/CompanionshipOverhaul.csproj';
 
-        $pdllFX = $path + '/Modules/CompanionOverhaul/bin/Win64_Shipping_Client/CompanionOverhaul*.dll';
-        $ppdbFX = $path + '/Modules/CompanionOverhaul/bin/Win64_Shipping_Client/CompanionOverhaul*.pdb';
-        $pdllCore = $path + '/Modules/CompanionOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/CompanionOverhaul*.dll';
-        $ppdbCore = $path + '/Modules/CompanionOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/CompanionOverhaul*.pdb';
+        $pdllFX = $path + '/Modules/CompanionshipOverhaul/bin/Win64_Shipping_Client/CompanionshipOverhaul*.dll';
+        $ppdbFX = $path + '/Modules/CompanionshipOverhaul/bin/Win64_Shipping_Client/CompanionshipOverhaul*.pdb';
+        $pdllCore = $path + '/Modules/CompanionshipOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/CompanionshipOverhaul*.dll';
+        $ppdbCore = $path + '/Modules/CompanionshipOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/CompanionshipOverhaul*.pdb';
 
         # The folders are required to be created before executing the script
         New-Item -ItemType directory -Force -Path $path;
@@ -95,7 +95,7 @@ jobs:
     - name: Upload bannerlord folder
       uses: actions/upload-artifact@v4
       with:
-        name: CompanionOverhaul
+        name: CompanionshipOverhaul
         path: ./bannerlord/
 
 ###########################
@@ -110,7 +110,7 @@ jobs:
 #     mod_filename: Arena Overhaul
 #     mod_version: ${{ needs.build-module.outputs.mod_version }}
 #     mod_description: ${{ needs.build-module.outputs.mod_description }}
-#     artifact_name: CompanionOverhaul
+#     artifact_name: CompanionshipOverhaul
 #   secrets:
 #     NEXUSMODS_APIKEY: ${{ secrets.NEXUSMODS_APIKEY }}
 #     NEXUSMODS_COOKIES: ${{ secrets.NEXUSMODS_COOKIES }}
@@ -123,9 +123,9 @@ jobs:
 #   uses: BUTR/workflows/.github/workflows/release-steam.yml@master
 #   with:
 #     workshop_id: 2887640995
-#     mod_id: CompanionOverhaul
+#     mod_id: CompanionshipOverhaul
 #     mod_description: ${{ needs.build-module.outputs.mod_description }}
-#     artifact_name: CompanionOverhaul
+#     artifact_name: CompanionshipOverhaul
 #   secrets:
 #     STEAM_LOGIN: ${{ secrets.STEAM_WORKSHOP_LOGIN }}
 #     STEAM_PASSWORD: ${{ secrets.STEAM_WORKSHOP_PASSWORD }}
@@ -138,7 +138,7 @@ jobs:
     needs: ["build-module"]
     uses: BUTR/workflows/.github/workflows/release-github.yml@master
     with:
-      mod_id: CompanionOverhaul
+      mod_id: CompanionshipOverhaul
       mod_version: ${{ needs.build-module.outputs.mod_version }}
       mod_description: ${{ needs.build-module.outputs.mod_description }}
-      artifact_name: CompanionOverhaul
+      artifact_name: CompanionshipOverhaul

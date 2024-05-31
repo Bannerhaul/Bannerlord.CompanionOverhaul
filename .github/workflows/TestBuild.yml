@@ -34,22 +34,22 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: Build Arena Overhaul for test
+    - name: Build Companionship Overhaul for test
       run: |
         $path = $PWD.Path + '/bannerlord';
 
         $implFX = $PWD.Path + '/bannerlord-implementationsFX';
         $implCore = $PWD.Path + '/bannerlord-implementationsCore';
 
-        $finalFX = $path + '/Modules/CompanionOverhaul/bin/Win64_Shipping_Client/';
-        $finalCore = $path + '/Modules/CompanionOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/';
+        $finalFX = $path + '/Modules/CompanionshipOverhaul/bin/Win64_Shipping_Client/';
+        $finalCore = $path + '/Modules/CompanionshipOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/';
         
-        $proj = 'src/CompanionOverhaul/CompanionOverhaul.csproj';
+        $proj = 'src/CompanionshipOverhaul/CompanionshipOverhaul.csproj';
 
-        $pdllFX = $path + '/Modules/CompanionOverhaul/bin/Win64_Shipping_Client/CompanionOverhaul*.dll';
-        $ppdbFX = $path + '/Modules/CompanionOverhaul/bin/Win64_Shipping_Client/CompanionOverhaul*.pdb';
-        $pdllCore = $path + '/Modules/CompanionOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/CompanionOverhaul*.dll';
-        $ppdbCore = $path + '/Modules/CompanionOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/CompanionOverhaul*.pdb';
+        $pdllFX = $path + '/Modules/CompanionshipOverhaul/bin/Win64_Shipping_Client/CompanionshipOverhaul*.dll';
+        $ppdbFX = $path + '/Modules/CompanionshipOverhaul/bin/Win64_Shipping_Client/CompanionshipOverhaul*.pdb';
+        $pdllCore = $path + '/Modules/CompanionshipOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/CompanionshipOverhaul*.dll';
+        $ppdbCore = $path + '/Modules/CompanionshipOverhaul/bin/Gaming.Desktop.x64_Shipping_Client/CompanionshipOverhaul*.pdb';
 
         # The folders are required to be created before executing the script
         New-Item -ItemType directory -Force -Path $path;

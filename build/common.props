@@ -81,6 +81,8 @@
         <GameVersionWithPrefix Condition="$(IsBeta)">$(GameBetaVersion)</GameVersionWithPrefix>
         <!-- -->
         <GameVersion>$(GameVersionWithPrefix.Substring(1))</GameVersion>
+        <!-- Manually override GameVersion -->
+        <!--<OverrideGameVersion>v1.0.3</OverrideGameVersion>-->
     </PropertyGroup>
     <PropertyGroup Condition="$(OverrideGameVersion) != ''">
         <GameVersionWithPrefix>$(OverrideGameVersion)</GameVersionWithPrefix>
